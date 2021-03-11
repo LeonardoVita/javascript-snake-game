@@ -8,6 +8,11 @@ snake[0] = {
   y: 8 * box,
 }
 
+const food = {
+  x: Math.floor(Math.random() * 15 + 1) * box,
+  y: Math.floor(Math.random() * 15 + 1) * box,  
+}
+
 let direction = "right"
 
 function createBackground(){
@@ -20,6 +25,11 @@ function createSnake(){
     context.fillStyle = "green";
     context.fillRect(snake[i].x, snake[i].y, box, box)
   }
+}
+
+function createFood(){
+  context.fillStyle = "red";
+  context.fillRect(food.x, food.y, box, box) 
 }
 
 function update(event){
@@ -41,6 +51,7 @@ function playGame(){
 
   createBackground();
   createSnake();
+  createFood();
 
   let snakeX = snake[0].x;
   let snakeY = snake[0].y;
