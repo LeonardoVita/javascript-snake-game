@@ -150,11 +150,14 @@ function createSnake(){
   );
 }
 
-
-
 function createFood(){
-  context.fillStyle = "red";
-  context.fillRect(food.x, food.y, box, box)
+  context.drawImage(
+    sprites,
+    0, 192,
+    64, 64,
+    food.x, food.y,
+    box,box
+  );
 
   for(i=1; i < snake.length; i++){
     if(food.x === snake[i].x && food.y === snake[i].y ){  
