@@ -29,7 +29,15 @@ function createSnake(){
 
 function createFood(){
   context.fillStyle = "red";
-  context.fillRect(food.x, food.y, box, box) 
+  context.fillRect(food.x, food.y, box, box)
+
+  for(i=1; i < snake.length; i++){
+    if(food.x === snake[i].x && food.y === snake[i].y ){  
+      food.x = Math.floor(Math.random() * 15 + 1) * box;
+      food.y = Math.floor(Math.random() * 15 + 1) * box;
+    }
+  }
+
 }
 
 function update(event){
@@ -43,8 +51,7 @@ function update(event){
 document.addEventListener("keydown", update);
 
 function playGame(){
-  
-  
+
   if(snake[0].x >= 16 * box ) snake[0].x = 0;
   if(snake[0].x <= -1 * box ) snake[0].x = 16 * box;
   if(snake[0].y >=16 * box) snake[0].y = 0;
