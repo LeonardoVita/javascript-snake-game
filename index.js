@@ -1,3 +1,6 @@
+const sprites = new Image();
+sprites.src = "./snake-graphics.png";
+
 const canvas = document.getElementById("Snake");
 const context = canvas.getContext("2d");
 const box = 32;
@@ -21,7 +24,42 @@ function createBackground(){
 }
 
 function createSnake(){
-  for(i=0; i < snake.length; i++){
+
+  let spriteHead= {
+    x: 256,
+    y: 0,
+  };
+
+  switch (direction) {
+    case "right":
+      spriteHead.x = 256; 
+      spriteHead.y = 0;
+      break;
+    case "left":
+      spriteHead.x = 192; 
+      spriteHead.y = 64;      
+      break;
+    case "up":
+      spriteHead.x = 192; 
+      spriteHead.y = 0;
+      break;
+    case "down":
+      spriteHead.x = 256; 
+      spriteHead.y = 64;
+      break; 
+    default:
+      break;
+  }
+
+  context.drawImage(
+    sprites,
+    spriteHead.x, spriteHead.y,
+    64, 64,
+    snake[0].x, snake[0].y,
+    box,box
+  );
+
+  for(i=1; i < snake.length; i++){
     context.fillStyle = "green";
     context.fillRect(snake[i].x, snake[i].y, box, box)
   }
@@ -44,8 +82,7 @@ function update(event){
   if(event.keyCode === 37 && direction !== "right") direction = "left";
   if(event.keyCode === 38 && direction !== "down") direction = "up";
   if(event.keyCode === 39 && direction !== "left") direction = "right";
-  if(event.keyCode === 40 && direction !== "up") direction = "down";
-  
+  if(event.keyCode === 40 && direction !== "up") direction = "down";  
 }
 
 document.addEventListener("keydown", update);
