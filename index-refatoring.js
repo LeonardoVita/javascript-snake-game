@@ -6,8 +6,7 @@ window.onload = function(){
   const ctx = canvas.getContext("2d");
   
   const box = 32;  // tamanho dos quadrados
-  const boxes = 16; // quantidade des quadrados na area
-  const velocity = 1;  
+  const boxes = 16; // quantidade des quadrados na area 
   const snake = {
     x: 1,
     y: 8,
@@ -74,10 +73,7 @@ window.onload = function(){
     drawHead();  
     
     //snake body
-    ctx.fillStyle = "#ccc";   
-    for(i=1; i < trail.length ;i++) {
-      ctx.fillRect(trail[i].x * box,trail[i].y * box, box, box);         
-    }  
+    drawBody();     
     
     //snake tail
     ctx.fillStyle = "#888";
@@ -108,8 +104,7 @@ window.onload = function(){
     //snake trail update
     trail.push({
       x: snake.x,
-      y: snake.y,
-      direction : snake.direction
+      y: snake.y
     });
 
     while(trail.length > tail){
@@ -145,12 +140,13 @@ window.onload = function(){
       x:0,
       y:0
     }      
-    const {x,y} = trail[0].direction
+    const {x,y} = trail[0]
+    const {x:nextX, y:nextY} = trail[1] || snake
 
-    if( x === 1) spritePath = { x:256,y:128 } 
-    if( x === -1) spritePath = { x:192,y:192 }
-    if( y === 1) spritePath = { x:256,y:192 }
-    if( y === -1) spritePath = { x:192,y:128 }
+    if( x < nextX ) spritePath = { x:256,y:128 } 
+    if( x > nextX) spritePath = { x:192,y:192 }
+    if( y < nextY) spritePath = { x:256,y:192 }
+    if( y > nextY) spritePath = { x:192,y:128 }
 
     ctx.drawImage(
       sprites,
@@ -162,5 +158,58 @@ window.onload = function(){
     
   }
 
+  function drawBody(){
+
+    let spritePath = {
+      x:0,
+      y:0
+    } 
+
+    for(i=1; i < trail.length ;i++) {
+      let  haveRight = haveLeft = haveUp = haveDown = false; //the adjacent positions
+
+      const { x , y } = trail[i]
+      //before position
+      let { x: beforeX , y: beforeY } = trail[i-1];  
+
+      //next position
+      if( x < beforeX) haveRight = true;
+      if( x > beforeX) haveLeft = true;
+      if( y > beforeY)  haveUp = true;
+      if( y < beforeY)  haveDown = true;  
+
+      //after position
+      let { x: afterX , y: afterY } = trail[i+1] || snake;      
+
+      if( x < afterX) haveRight = true;
+      if( x > afterX) haveLeft = true;
+      if( y > afterY) haveUp = true;
+      if( y < afterY) haveDown = true; 
+      
+      
+
+      // console.log({x,y,beforeX,beforeY,afterX,afterY})
+      console.log(haveRight,haveLeft,haveUp,haveDown)      
+
+      //set sprite path
+      if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
+      if( haveUp && haveDown) spritePath = { x:128,y:64 } 
+
+      if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
+      if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
+      if( haveRight && haveDown) spritePath = { x:0,y:0 } 
+      if( haveRight && haveUp) spritePath = { x:0,y:64 } 
+      
+      
+      ctx.drawImage(
+        sprites,
+        spritePath.x, spritePath.y,
+        64, 64,
+        trail[i].x * box, trail[i].y * box,
+        box,box
+      );
+
+    } 
+  }
   
 }
