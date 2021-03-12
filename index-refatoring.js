@@ -82,7 +82,7 @@ window.onload = function(){
     //snake tail
     ctx.fillStyle = "#888";
     if(trail.length)
-      ctx.fillRect(trail[0].x * box,trail[0].y * box, box, box)
+      drawTail();
   }
 
   function loop(){
@@ -109,6 +109,7 @@ window.onload = function(){
     trail.push({
       x: snake.x,
       y: snake.y,
+      direction : snake.direction
     });
 
     while(trail.length > tail){
@@ -138,4 +139,28 @@ window.onload = function(){
     );
 
   }
+
+  function drawTail(){
+    let spritePath = {
+      x:0,
+      y:0
+    }      
+    const {x,y} = trail[0].direction
+
+    if( x === 1) spritePath = { x:256,y:128 } 
+    if( x === -1) spritePath = { x:192,y:192 }
+    if( y === 1) spritePath = { x:256,y:192 }
+    if( y === -1) spritePath = { x:192,y:128 }
+
+    ctx.drawImage(
+      sprites,
+      spritePath.x, spritePath.y,
+      64, 64,
+      trail[0].x * box, trail[0].y * box,
+      box,box
+    );
+    
+  }
+
+  
 }
