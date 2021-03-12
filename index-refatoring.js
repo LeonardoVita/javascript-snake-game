@@ -22,15 +22,11 @@ window.onload = function(){
   
   const trail = [];
   console.log(trail.length)
-  let tail = 5;
+  let tail = 3;
 
-  function game(){
-    update();   
-    render();
-    loop();
-  }
+  
 
-  document.addEventListener("keydown", moveSnake)
+  document.addEventListener("keydown", moveSnake);
 
   function moveSnake(e){
     if(e.keyCode === 39 && snake.direction.x !== -1 ) snake.direction = { x: 1, y: 0};
@@ -69,10 +65,15 @@ window.onload = function(){
     
     //snake body
     ctx.fillStyle = "#ccc";   
-    for(i=0; i < trail.length ;i++) {
+    for(i=1; i < trail.length ;i++) {
       console.log("entrou")
       ctx.fillRect(trail[i].x * box,trail[i].y * box, box, box);         
-    }    
+    }  
+    
+    //snake tail
+    ctx.fillStyle = "#888";
+    if(trail.length)
+      ctx.fillRect(trail[0].x * box,trail[0].y * box, box, box)
   }
 
   function loop(){
@@ -105,6 +106,12 @@ window.onload = function(){
       trail.shift();
     }
 
+  }
+
+  function game(){
+    update();   
+    render();
+    loop();
   }
  
 
