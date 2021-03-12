@@ -10,6 +10,8 @@ snake[0] = {
   x: 8 * box,
   y: 8 * box,
 }
+snake[1] = {}
+
 
 const food = {
   x: Math.floor(Math.random() * 15 + 1) * box,
@@ -51,6 +53,7 @@ function createSnake(){
       break;
   }
 
+  //SNAKE HEAD
   context.drawImage(
     sprites,
     spriteHead.x, spriteHead.y,
@@ -59,11 +62,95 @@ function createSnake(){
     box,box
   );
 
-  for(i=1; i < snake.length; i++){
-    context.fillStyle = "green";
-    context.fillRect(snake[i].x, snake[i].y, box, box)
+  //SNAKE BODDY
+  for(i=1; i < snake.length-1; i++){
+    const spriteBody= {
+      x: 0,
+      y: 0
+    }
+
+    if(snake[i-1].x < snake[i].x && snake[i+1].x > snake[i].x || 
+      snake[i-1].x > snake[i].x && snake[i+1].x < snake[i].x){
+      spriteBody.x = 64;
+      spriteBody.y = 0;
+    }
+
+    if(snake[i-1].y < snake[i].y && snake[i+1].y > snake[i].y || 
+      snake[i-1].y > snake[i].y && snake[i+1].y < snake[i].y){
+      spriteBody.x = 128;
+      spriteBody.y = 64;
+    }
+
+
+    if(snake[i-1].x > snake[i].x && snake[i+1].y > snake[i].y ||
+      snake[i+1].x > snake[i].x && snake[i-1].y > snake[i].y){
+      spriteBody.x = 0;
+      spriteBody.y = 0;
+    }    
+
+    if(snake[i-1].y < snake[i].y && snake[i+1].x > snake[i].x ||
+      snake[i+1].y < snake[i].y && snake[i-1].x > snake[i].x){
+      spriteBody.x = 0;
+      spriteBody.y = 64;
+    } 
+
+    if(snake[i-1].y > snake[i].y && snake[i+1].x < snake[i].x ||
+      snake[i+1].y > snake[i].y && snake[i-1].x < snake[i].x){
+      spriteBody.x = 128;
+      spriteBody.y = 0;
+    } 
+
+    if(snake[i-1].x < snake[i].x && snake[i+1].y < snake[i].y ||
+      snake[i+1].x < snake[i].x && snake[i-1].y < snake[i].y){
+      spriteBody.x = 128;
+      spriteBody.y = 128;
+    } 
+
+    context.drawImage(
+      sprites,
+      spriteBody.x, spriteBody.y,
+      64, 64,
+      snake[i].x, snake[i].y,
+      box,box
+    );
+    
+    
   }
+
+  //SNAKE TAIL
+  
+  let spriteTail= {
+    x: 256,
+    y: 128
+  }
+
+  if(snake[snake.length -2].y < snake[snake.length -1].y){
+    spriteTail.x = 192;
+    spriteTail.y = 128;
+  }
+  if(snake[snake.length -2].y > snake[snake.length -1].y){
+    spriteTail.x = 256;
+    spriteTail.y = 192;
+  }
+  if(snake[snake.length -2].x < snake[snake.length -1].x){
+    spriteTail.x = 192;
+    spriteTail.y = 192;
+  }
+  if(snake[snake.length -2].x > snake[snake.length -1].x){
+    spriteTail.x = 256;
+    spriteTail.y = 128;
+  }
+
+  context.drawImage(
+    sprites,
+    spriteTail.x, spriteTail.y,
+    64, 64,
+    snake[snake.length -1].x, snake[snake.length -1].y,
+    box,box
+  );
 }
+
+
 
 function createFood(){
   context.fillStyle = "red";
