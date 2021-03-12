@@ -1,11 +1,12 @@
 window.onload = function(){
+  const sprites = new Image();
+  sprites.src = "./snake-graphics.png";
+
   const canvas = document.getElementById("Snake");
   const ctx = canvas.getContext("2d");
   
-  setInterval(game, 1000/10); //inicia o jogo
-  
   const box = 32;  // tamanho dos quadrados
-  const boxes = 16 // quantidade des quadrados na area
+  const boxes = 16; // quantidade des quadrados na area
   const velocity = 1;  
   const snake = {
     x: 1,
@@ -15,19 +16,24 @@ window.onload = function(){
       y: 0,
     }
   } 
+
   const food = {
     x: Math.floor(Math.random() * 15 + 1),
     y: Math.floor(Math.random() * 15 + 1), 
   }
   
   const trail = [];
-  console.log(trail.length)
-  let tail = 3;
+  let tail = 3; 
 
+  setInterval(game, 1000/10); //inicia o jogo
+
+  function game(){
+    update();   
+    render();
+    loop();
+  }
   
-
   document.addEventListener("keydown", moveSnake);
-
   function moveSnake(e){
     if(e.keyCode === 39 && snake.direction.x !== -1 ) snake.direction = { x: 1, y: 0};
     if(e.keyCode === 40 && snake.direction.y !== -1) snake.direction = { x: 0, y: 1};
@@ -56,17 +62,20 @@ window.onload = function(){
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
     //food
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x * box,food.y * box, box, box);
+    ctx.drawImage(
+      sprites,
+      0, 192,
+      64, 64,
+      food.x * box, food.y * box,
+      box,box
+    );
 
     //snake Head
-    ctx.fillStyle = "#000";
-    ctx.fillRect(snake.x * box,snake.y * box, box, box);  
+    drawHead();  
     
     //snake body
     ctx.fillStyle = "#ccc";   
     for(i=1; i < trail.length ;i++) {
-      console.log("entrou")
       ctx.fillRect(trail[i].x * box,trail[i].y * box, box, box);         
     }  
     
@@ -85,7 +94,7 @@ window.onload = function(){
           x:0,
           y:0,
         }  
-        alert("GAME OVER")     
+        alert("GAME OVER");    
       }    
     }
 
@@ -108,11 +117,25 @@ window.onload = function(){
 
   }
 
-  function game(){
-    update();   
-    render();
-    loop();
-  }
- 
+  function drawHead(){
+    let spritePath = {
+      x:0,
+      y:0
+    }     
+    const {x, y} = snake.direction;
 
+    if( x === 1) spritePath = { x:256,y:0 } 
+    if( x === -1) spritePath = { x:192,y:64 }
+    if( y === 1) spritePath = { x:256,y:64 }
+    if( y === -1) spritePath = { x:192,y:0 }
+
+    ctx.drawImage(
+      sprites,
+      spritePath.x, spritePath.y,
+      64, 64,
+      snake.x * box, snake.y * box,
+      box,box
+    );
+
+  }
 }
