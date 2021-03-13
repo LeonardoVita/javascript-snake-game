@@ -24,7 +24,7 @@ window.onload = function(){
   const trail = [];
   let tail = 2; 
 
-  setInterval(game, 1000/8); //inicia o jogo
+  const interval = setInterval(game, 1000/8); //inicia o jogo
 
   function game(){
     update();   
@@ -89,8 +89,8 @@ window.onload = function(){
         snake.direction = {
           x:0,
           y:0,
-        }  
-        alert("GAME OVER");    
+        }       
+        gameOver();    
       }    
     }
 
@@ -233,4 +233,20 @@ window.onload = function(){
     } 
   }
   
+  function gameOver(){
+
+    clearInterval(interval);
+    snake.direction={
+      x:0,
+      y:0
+    }
+    document.removeEventListener("keydown", moveSnake);
+
+    ctx.fillStyle = "#00000065"
+    ctx.fillRect(0,0, canvas.width, canvas.height)
+    ctx.fillStyle = "#ffffff"
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillText("Game Over", canvas.width/2 -80, canvas.height/2 - 5);
+    setInterval(()=>document.location.reload(true),4000);
+  }
 }
