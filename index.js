@@ -58,6 +58,12 @@ window.onload = function(){
 
   function update(){     
 
+    //snake trail update
+    trail.push({
+      x: snake.x,
+      y: snake.y,
+      anchor: snake.direction
+    });
     //move snake head
     snake.x += snake.direction.x;
     snake.y += snake.direction.y;
@@ -149,11 +155,7 @@ window.onload = function(){
       tail++;         
     }
     
-    //snake trail update
-    trail.push({
-      x: snake.x,
-      y: snake.y,
-    });
+    
 
     while(trail.length > tail){
       trail.shift();
@@ -210,30 +212,25 @@ window.onload = function(){
 
     let spritePath = {
       x:0,
-      y:0
+      y:128,
     } 
 
     for(i=1; i < trail.length ;i++) {
       let  haveRight = haveLeft = haveUp = haveDown = false; //the adjacent positions
-      const { x , y } = trail[i]
-
-      //before position
-      let { x: beforeX , y: beforeY } = trail[i-1]; 
-      //after position
-      let { x: afterX , y: afterY } = trail[i+1] || snake; 
-       
-      if( x < beforeX) haveRight = true;
-      else if( x > beforeX) haveLeft = true;
-      else if( y > beforeY)  haveUp = true;
-      else if( y < beforeY)  haveDown = true;            
-
-      if( x < afterX) haveRight = true;
-      else if( x > afterX) haveLeft = true;
-      else if( y > afterY) haveUp = true;
-      else if( y < afterY) haveDown = true;      
+      const { x , y } = trail[i].anchor
+      const {x:beforeX, y:beforeY} = trail[i-1].anchor 
       
+      if(x > 0) haveRight = true
+      if(x < 0) haveLeft = true
+      if(y < 0) haveUp = true
+      if(y > 0) haveDown = true
+      
+      if(beforeX * -1 < 0) haveLeft = true
+      if(beforeX * -1 > 0 ) haveRight = true
+      if(beforeY * -1 < 0) haveUp = true
+      if(beforeY * -1 > 0) haveDown = true
       // console.log({x,y,beforeX,beforeY,afterX,afterY})
-      console.log(haveRight,haveLeft,haveUp,haveDown)     
+      // console.log(haveRight,haveLeft,haveUp,haveDown)     
 
       //set sprite path
       if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
