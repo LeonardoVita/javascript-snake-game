@@ -22,9 +22,9 @@ window.onload = function(){
   }
   
   const trail = [];
-  let tail = 2; 
+  let tail =2; 
 
-  const interval = setInterval(game, 1000/8); //inicia o jogo
+  const interval = setInterval(game, 1000/10); //inicia o jogo
 
   function game(){
     update();  
@@ -98,7 +98,8 @@ window.onload = function(){
     drawHead();  
     
     //snake body
-    drawBody();     
+    if(trail.length)
+      drawBody();     
     
     //snake tail
     ctx.fillStyle = "#888";
@@ -151,7 +152,7 @@ window.onload = function(){
     //snake trail update
     trail.push({
       x: snake.x,
-      y: snake.y
+      y: snake.y,
     });
 
     while(trail.length > tail){
@@ -162,7 +163,7 @@ window.onload = function(){
 
   function drawHead(){
     let spritePath = {
-      x:0,
+      x:256,
       y:0
     }     
     const {x, y} = snake.direction;
@@ -214,32 +215,29 @@ window.onload = function(){
 
     for(i=1; i < trail.length ;i++) {
       let  haveRight = haveLeft = haveUp = haveDown = false; //the adjacent positions
-
       const { x , y } = trail[i]
-      //before position
-      let { x: beforeX , y: beforeY } = trail[i-1];  
 
-      //next position
+      //before position
+      let { x: beforeX , y: beforeY } = trail[i-1]; 
+      //after position
+      let { x: afterX , y: afterY } = trail[i+1] || snake; 
+       
       if( x < beforeX) haveRight = true;
       else if( x > beforeX) haveLeft = true;
       else if( y > beforeY)  haveUp = true;
-      else if( y < beforeY)  haveDown = true;  
-
-      //after position
-      let { x: afterX , y: afterY } = trail[i+1] || snake;      
+      else if( y < beforeY)  haveDown = true;            
 
       if( x < afterX) haveRight = true;
       else if( x > afterX) haveLeft = true;
       else if( y > afterY) haveUp = true;
-      else if( y < afterY) haveDown = true;       
-
+      else if( y < afterY) haveDown = true;      
+      
       // console.log({x,y,beforeX,beforeY,afterX,afterY})
-      // console.log(haveRight,haveLeft,haveUp,haveDown)      
+      console.log(haveRight,haveLeft,haveUp,haveDown)     
 
       //set sprite path
       if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
       else if( haveUp && haveDown) spritePath = { x:128,y:64 } 
-
       else if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
       else if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
       else if( haveRight && haveDown) spritePath = { x:0,y:0 } 
