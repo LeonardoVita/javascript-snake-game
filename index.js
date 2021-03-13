@@ -1,232 +1,236 @@
-const sprites = new Image();
-sprites.src = "./snake-graphics.png";
+window.onload = function(){
+  const sprites = new Image();
+  sprites.src = "./snake-graphics.png";
 
-const canvas = document.getElementById("Snake");
-const context = canvas.getContext("2d");
-const box = 32;
-const snake = [];
+  const canvas = document.getElementById("Snake");
+  const ctx = canvas.getContext("2d");
+  
+  const box = 32;  // tamanho dos quadrados
+  const boxes = 16; // quantidade des quadrados na area 
+  const snake = {
+    x: 1,
+    y: 8,
+    direction: {
+      x: 1,
+      y: 0,
+    }
+  } 
 
-snake[0] = {
-  x: 8 * box,
-  y: 8 * box,
-}
-snake[1] = {}
+  const food = {
+    x: Math.floor(Math.random() * 15 + 1),
+    y: Math.floor(Math.random() * 15 + 1), 
+  }
+  
+  const trail = [];
+  let tail = 2; 
 
+  setInterval(game, 1000/8); //inicia o jogo
 
-const food = {
-  x: Math.floor(Math.random() * 15 + 1) * box,
-  y: Math.floor(Math.random() * 15 + 1) * box,  
-}
-
-let direction = "right"
-
-function createBackground(){
-  context.fillStyle = "lightgreen";
-  context.fillRect(0, 0, 16 * box, 16 * box);
-}
-
-function createSnake(){
-
-  let spriteHead= {
-    x: 256,
-    y: 0,
-  };
-
-  switch (direction) {
-    case "right":
-      spriteHead.x = 256; 
-      spriteHead.y = 0;
-      break;
-    case "left":
-      spriteHead.x = 192; 
-      spriteHead.y = 64;      
-      break;
-    case "up":
-      spriteHead.x = 192; 
-      spriteHead.y = 0;
-      break;
-    case "down":
-      spriteHead.x = 256; 
-      spriteHead.y = 64;
-      break; 
-    default:
-      break;
+  function game(){
+    update();   
+    render();
+    loop();
+  }
+  
+  document.addEventListener("keydown", moveSnake);
+  function moveSnake(e){
+    if(e.keyCode === 39 && snake.direction.x !== -1 ) snake.direction = { x: 1, y: 0};
+    if(e.keyCode === 40 && snake.direction.y !== -1) snake.direction = { x: 0, y: 1};
+    if(e.keyCode === 37 && snake.direction.x !== 1) snake.direction = { x: -1, y: 0};
+    if(e.keyCode === 38 && snake.direction.y !== 1) snake.direction = { x: 0, y: -1};
   }
 
-  //SNAKE HEAD
-  context.drawImage(
-    sprites,
-    spriteHead.x, spriteHead.y,
-    64, 64,
-    snake[0].x, snake[0].y,
-    box,box
-  );
+  function update(){      
+    
+    //move snake head
+    snake.x += snake.direction.x;
+    snake.y += snake.direction.y;
 
-  //SNAKE BODDY
-  for(i=1; i < snake.length-1; i++){
-    const spriteBody= {
-      x: 0,
-      y: 0
-    }
+    // snake atravessa o mapa
+    if(snake.x < 0 ) snake.x = boxes - 1;
+    if(snake.x > boxes - 1 ) snake.x = 0;
+    if(snake.y < 0 ) snake.y = boxes - 1;
+    if(snake.y > boxes - 1 ) snake.y = 0;
 
-    if(snake[i-1].x < snake[i].x && snake[i+1].x > snake[i].x || 
-      snake[i-1].x > snake[i].x && snake[i+1].x < snake[i].x){
-      spriteBody.x = 64;
-      spriteBody.y = 0;
-    }
+  }
 
-    if(snake[i-1].y < snake[i].y && snake[i+1].y > snake[i].y || 
-      snake[i-1].y > snake[i].y && snake[i+1].y < snake[i].y){
-      spriteBody.x = 128;
-      spriteBody.y = 64;
-    }
+  function render(){
 
+    //backgorund
+    ctx.fillStyle = "lightgreen";
+    ctx.fillRect(0,0, canvas.width, canvas.height);
 
-    if(snake[i-1].x > snake[i].x && snake[i+1].y > snake[i].y ||
-      snake[i+1].x > snake[i].x && snake[i-1].y > snake[i].y){
-      spriteBody.x = 0;
-      spriteBody.y = 0;
-    }    
-
-    if(snake[i-1].y < snake[i].y && snake[i+1].x > snake[i].x ||
-      snake[i+1].y < snake[i].y && snake[i-1].x > snake[i].x){
-      spriteBody.x = 0;
-      spriteBody.y = 64;
-    } 
-
-    if(snake[i-1].y > snake[i].y && snake[i+1].x < snake[i].x ||
-      snake[i+1].y > snake[i].y && snake[i-1].x < snake[i].x){
-      spriteBody.x = 128;
-      spriteBody.y = 0;
-    } 
-
-    if(snake[i-1].x < snake[i].x && snake[i+1].y < snake[i].y ||
-      snake[i+1].x < snake[i].x && snake[i-1].y < snake[i].y){
-      spriteBody.x = 128;
-      spriteBody.y = 128;
-    } 
-
-    context.drawImage(
+    //food
+    ctx.drawImage(
       sprites,
-      spriteBody.x, spriteBody.y,
+      0, 192,
       64, 64,
-      snake[i].x, snake[i].y,
+      food.x * box, food.y * box,
+      box,box
+    );
+
+    //snake Head
+    drawHead();  
+    
+    //snake body
+    drawBody();     
+    
+    //snake tail
+    ctx.fillStyle = "#888";
+    if(trail.length)
+      drawTail();
+  }
+
+  function loop(){
+
+    //body colision check
+    for(i=0; i < trail.length ;i++) {
+      if(trail[i].x === snake.x && trail[i].y === snake.y){
+        snake.direction = {
+          x:0,
+          y:0,
+        }  
+        alert("GAME OVER");    
+      }    
+    }
+
+    //snake food check
+    if(snake.x === food.x && snake.y === food.y){
+      let randomX;
+      let randomY;
+     
+      let isClearForDrawFood;
+      do{ 
+        isClearForDrawFood = true;
+        randomX = Math.floor(Math.random() * 15 + 1);
+        randomY = Math.floor(Math.random() * 15 + 1);
+        for(i=0; i < trail.length; i++){
+
+          if(randomX === trail[i].x && randomY === trail[i].y ){  
+            isClearForDrawFood = false;   
+            alert("new food 1");
+          }
+
+          if(randomX === snake.x && randomY === snake.y){
+            isClearForDrawFood = false;
+            alert("new food 2");
+          }
+        }
+
+      }while(!isClearForDrawFood);     
+
+      food.x = randomX;
+      food.y = randomY;  
+      tail++;         
+    }
+    
+    //snake trail update
+    trail.push({
+      x: snake.x,
+      y: snake.y
+    });
+
+    while(trail.length > tail){
+      trail.shift();
+    }
+
+  }
+
+  function drawHead(){
+    let spritePath = {
+      x:0,
+      y:0
+    }     
+    const {x, y} = snake.direction;
+
+    if( x === 1) spritePath = { x:256,y:0 } 
+    if( x === -1) spritePath = { x:192,y:64 }
+    if( y === 1) spritePath = { x:256,y:64 }
+    if( y === -1) spritePath = { x:192,y:0 }
+
+    ctx.drawImage(
+      sprites,
+      spritePath.x, spritePath.y,
+      64, 64,
+      snake.x * box, snake.y * box,
+      box,box
+    );
+
+  }
+
+  function drawTail(){
+    let spritePath = {
+      x:0,
+      y:0
+    }      
+    const {x,y} = trail[0]
+    const {x:nextX, y:nextY} = trail[1] || snake
+
+    if( x < nextX ) spritePath = { x:256,y:128 } 
+    if( x > nextX) spritePath = { x:192,y:192 }
+    if( y < nextY) spritePath = { x:256,y:192 }
+    if( y > nextY) spritePath = { x:192,y:128 }
+
+    ctx.drawImage(
+      sprites,
+      spritePath.x, spritePath.y,
+      64, 64,
+      trail[0].x * box, trail[0].y * box,
       box,box
     );
     
-    
   }
 
-  //SNAKE TAIL
-  
-  let spriteTail= {
-    x: 256,
-    y: 128
-  }
+  function drawBody(){
 
-  if(snake[snake.length -2].y < snake[snake.length -1].y){
-    spriteTail.x = 192;
-    spriteTail.y = 128;
-  }
-  if(snake[snake.length -2].y > snake[snake.length -1].y){
-    spriteTail.x = 256;
-    spriteTail.y = 192;
-  }
-  if(snake[snake.length -2].x < snake[snake.length -1].x){
-    spriteTail.x = 192;
-    spriteTail.y = 192;
-  }
-  if(snake[snake.length -2].x > snake[snake.length -1].x){
-    spriteTail.x = 256;
-    spriteTail.y = 128;
-  }
+    let spritePath = {
+      x:0,
+      y:0
+    } 
 
-  context.drawImage(
-    sprites,
-    spriteTail.x, spriteTail.y,
-    64, 64,
-    snake[snake.length -1].x, snake[snake.length -1].y,
-    box,box
-  );
-}
+    for(i=1; i < trail.length ;i++) {
+      let  haveRight = haveLeft = haveUp = haveDown = false; //the adjacent positions
 
-function createFood(){
-  context.drawImage(
-    sprites,
-    0, 192,
-    64, 64,
-    food.x, food.y,
-    box,box
-  );
+      const { x , y } = trail[i]
+      //before position
+      let { x: beforeX , y: beforeY } = trail[i-1];  
 
-  for(i=1; i < snake.length; i++){
-    if(food.x === snake[i].x && food.y === snake[i].y ){  
-      food.x = Math.floor(Math.random() * 15 + 1) * box;
-      food.y = Math.floor(Math.random() * 15 + 1) * box;
-    }
-  }
+      //next position
+      if( x < beforeX) haveRight = true;
+      if( x > beforeX) haveLeft = true;
+      if( y > beforeY)  haveUp = true;
+      if( y < beforeY)  haveDown = true;  
 
-}
+      //after position
+      let { x: afterX , y: afterY } = trail[i+1] || snake;      
 
-function update(event){
-  if(event.keyCode === 37 && direction !== "right") direction = "left";
-  if(event.keyCode === 38 && direction !== "down") direction = "up";
-  if(event.keyCode === 39 && direction !== "left") direction = "right";
-  if(event.keyCode === 40 && direction !== "up") direction = "down";  
-}
+      if( x < afterX) haveRight = true;
+      if( x > afterX) haveLeft = true;
+      if( y > afterY) haveUp = true;
+      if( y < afterY) haveDown = true;       
 
-document.addEventListener("keydown", update);
+      // console.log({x,y,beforeX,beforeY,afterX,afterY})
+      // console.log(haveRight,haveLeft,haveUp,haveDown)      
 
-function playGame(){
+      //set sprite path
+      if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
+      if( haveUp && haveDown) spritePath = { x:128,y:64 } 
 
-  if(snake[0].x >= 16 * box ) snake[0].x = 0;
-  if(snake[0].x <= -1 * box ) snake[0].x = 16 * box;
-  if(snake[0].y >=16 * box) snake[0].y = 0;
-  if(snake[0].y <= -1 * box ) snake[0].y = 16 * box;
-  
-  for(i=1; i < snake.length; i++){
-    if(snake[0].x === snake[i].x && snake[0].y === snake[i].y ){
-      clearInterval(jogo);
-      alert("PERDEU O JOGO! :(");
-    }
-  }
+      if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
+      if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
+      if( haveRight && haveDown) spritePath = { x:0,y:0 } 
+      if( haveRight && haveUp) spritePath = { x:0,y:64 } 
+      
+      
+      ctx.drawImage(
+        sprites,
+        spritePath.x, spritePath.y,
+        64, 64,
+        trail[i].x * box, trail[i].y * box,
+        box,box
+      );
 
-  createBackground();
-  createSnake();
-  createFood();
-
-  let snakeX = snake[0].x;
-  let snakeY = snake[0].y;
-
-  switch (direction) {
-    case "right":
-      snakeX += box;
-      break;
-    case "left":
-      snakeX -= box;
-      break;
-    case "up":
-      snakeY -= box;
-      break;
-    case "down":
-      snakeY += box;
-      break; 
-    default:
-      break;
+    } 
   }
   
-  if(snakeX !== food.x || snakeY !== food.y){
-    snake.pop();
-  }else{
-    food.x = Math.floor(Math.random() * 15 + 1) * box;
-    food.y = Math.floor(Math.random() * 15 + 1) * box;
-  }
-
-  let newHead = {
-    x: snakeX,
-    y: snakeY,
-  }
-  snake.unshift(newHead);
 }
-
-const jogo = setInterval(playGame, 100);
