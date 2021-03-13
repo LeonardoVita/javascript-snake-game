@@ -112,13 +112,11 @@ window.onload = function(){
         for(i=0; i < trail.length; i++){
 
           if(randomX === trail[i].x && randomY === trail[i].y ){  
-            isClearForDrawFood = false;   
-            alert("new food 1");
+            isClearForDrawFood = false;  
           }
 
           if(randomX === snake.x && randomY === snake.y){
             isClearForDrawFood = false;
-            alert("new food 2");
           }
         }
 
