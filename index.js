@@ -33,11 +33,27 @@ window.onload = function(){
   }
   
   document.addEventListener("keydown", moveSnake);
+  let haveMovementBuffer = false
+
   function moveSnake(e){
-    if(e.keyCode === 39 && snake.direction.x !== -1 ) snake.direction = { x: 1, y: 0};
-    if(e.keyCode === 40 && snake.direction.y !== -1) snake.direction = { x: 0, y: 1};
-    if(e.keyCode === 37 && snake.direction.x !== 1) snake.direction = { x: -1, y: 0};
-    if(e.keyCode === 38 && snake.direction.y !== 1) snake.direction = { x: 0, y: -1};
+    if(!haveMovementBuffer){
+      if(e.keyCode === 39 && snake.direction.x !== -1 ){ 
+        snake.direction = { x: 1, y: 0};
+        haveMovementBuffer = true;
+      }
+      if(e.keyCode === 40 && snake.direction.y !== -1) {
+        snake.direction = { x: 0, y: 1};
+        haveMovementBuffer = true;
+      }
+      if(e.keyCode === 37 && snake.direction.x !== 1) {
+        snake.direction = { x: -1, y: 0}
+        haveMovementBuffer = true;
+      };
+      if(e.keyCode === 38 && snake.direction.y !== 1) {
+        snake.direction = { x: 0, y: -1};
+        haveMovementBuffer = true;
+      }
+    }
   }
 
   function update(){     
@@ -84,6 +100,8 @@ window.onload = function(){
     ctx.fillStyle = "#888";
     if(trail.length)
       drawTail();
+
+      haveMovementBuffer = false;  
   }
 
   function loop(){
