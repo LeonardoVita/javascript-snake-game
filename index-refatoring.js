@@ -22,9 +22,9 @@ window.onload = function(){
   }
   
   const trail = [];
-  let tail = 3; 
+  let tail = 2; 
 
-  setInterval(game, 1000/10); //inicia o jogo
+  setInterval(game, 1000/8); //inicia o jogo
 
   function game(){
     update();   
@@ -96,8 +96,31 @@ window.onload = function(){
 
     //snake food check
     if(snake.x === food.x && snake.y === food.y){
-      food.x = Math.floor(Math.random() * 15 + 1);
-      food.y = Math.floor(Math.random() * 15 + 1);  
+      let randomX;
+      let randomY;
+     
+      let isClearForDrawFood;
+      do{ 
+        isClearForDrawFood = true;
+        randomX = Math.floor(Math.random() * 15 + 1);
+        randomY = Math.floor(Math.random() * 15 + 1);
+        for(i=0; i < trail.length; i++){
+
+          if(randomX === trail[i].x && randomY === trail[i].y ){  
+            isClearForDrawFood = false;   
+            alert("new food 1");
+          }
+
+          if(randomX === snake.x && randomY === snake.y){
+            isClearForDrawFood = false;
+            alert("new food 2");
+          }
+        }
+
+      }while(!isClearForDrawFood);     
+
+      food.x = randomX;
+      food.y = randomY;  
       tail++;         
     }
     
@@ -184,12 +207,10 @@ window.onload = function(){
       if( x < afterX) haveRight = true;
       if( x > afterX) haveLeft = true;
       if( y > afterY) haveUp = true;
-      if( y < afterY) haveDown = true; 
-      
-      
+      if( y < afterY) haveDown = true;       
 
       // console.log({x,y,beforeX,beforeY,afterX,afterY})
-      console.log(haveRight,haveLeft,haveUp,haveDown)      
+      // console.log(haveRight,haveLeft,haveUp,haveDown)      
 
       //set sprite path
       if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
