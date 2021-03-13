@@ -3,4 +3,4 @@
 
 live - https://leonardovita.github.io/javascript-snake-game/
 
-![image](https://user-images.githubusercontent.com/43863949/111013947-3ac56680-8380-11eb-9cb4-7385ab5c0eaa.png)
+![image](https://user-images.githubusercontent.com/43863949/111037736-3cd10900-8404-11eb-9c82-257ed87a3ee0.png)
