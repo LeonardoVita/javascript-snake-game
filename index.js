@@ -27,7 +27,7 @@ window.onload = function(){
   const interval = setInterval(game, 1000/8); //inicia o jogo
 
   function game(){
-    update();   
+    update();  
     render();
     loop();
   }
@@ -41,15 +41,15 @@ window.onload = function(){
         snake.direction = { x: 1, y: 0};
         haveMovementBuffer = true;
       }
-      if(e.keyCode === 40 && snake.direction.y !== -1) {
+      else if(e.keyCode === 40 && snake.direction.y !== -1) {
         snake.direction = { x: 0, y: 1};
         haveMovementBuffer = true;
       }
-      if(e.keyCode === 37 && snake.direction.x !== 1) {
-        snake.direction = { x: -1, y: 0}
+      else if(e.keyCode === 37 && snake.direction.x !== 1) {
+        snake.direction = { x: -1, y: 0};
         haveMovementBuffer = true;
-      };
-      if(e.keyCode === 38 && snake.direction.y !== 1) {
+      }
+      else if(e.keyCode === 38 && snake.direction.y !== 1) {
         snake.direction = { x: 0, y: -1};
         haveMovementBuffer = true;
       }
@@ -64,9 +64,9 @@ window.onload = function(){
 
     // snake atravessa o mapa
     if(snake.x < 0 ) snake.x = boxes - 1;
-    if(snake.x > boxes - 1 ) snake.x = 0;
-    if(snake.y < 0 ) snake.y = boxes - 1;
-    if(snake.y > boxes - 1 ) snake.y = 0;
+    else if(snake.x > boxes - 1 ) snake.x = 0;
+    else if(snake.y < 0 ) snake.y = boxes - 1;
+    else if(snake.y > boxes - 1 ) snake.y = 0;
 
     //border colision
     // if(snake.x < 0 || snake.x > boxes - 1 || snake.y < 0 || snake.y > boxes - 1){
@@ -76,6 +76,10 @@ window.onload = function(){
   }
 
   function render(){
+   
+    //clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    ctx.beginPath();
 
     //backgorund
     ctx.fillStyle = "lightgreen";
@@ -101,7 +105,7 @@ window.onload = function(){
     if(trail.length)
       drawTail();
 
-      haveMovementBuffer = false;  
+    haveMovementBuffer = false;  
   }
 
   function loop(){
@@ -132,8 +136,7 @@ window.onload = function(){
           if(randomX === trail[i].x && randomY === trail[i].y ){  
             isClearForDrawFood = false;  
           }
-
-          if(randomX === snake.x && randomY === snake.y){
+          else if(randomX === snake.x && randomY === snake.y){
             isClearForDrawFood = false;
           }
         }
@@ -165,9 +168,9 @@ window.onload = function(){
     const {x, y} = snake.direction;
 
     if( x === 1) spritePath = { x:256,y:0 } 
-    if( x === -1) spritePath = { x:192,y:64 }
-    if( y === 1) spritePath = { x:256,y:64 }
-    if( y === -1) spritePath = { x:192,y:0 }
+    else if( x === -1) spritePath = { x:192,y:64 }
+    else if( y === 1) spritePath = { x:256,y:64 }
+    else if( y === -1) spritePath = { x:192,y:0 }
 
     ctx.drawImage(
       sprites,
@@ -188,9 +191,9 @@ window.onload = function(){
     const {x:nextX, y:nextY} = trail[1] || snake
 
     if( x < nextX ) spritePath = { x:256,y:128 } 
-    if( x > nextX) spritePath = { x:192,y:192 }
-    if( y < nextY) spritePath = { x:256,y:192 }
-    if( y > nextY) spritePath = { x:192,y:128 }
+    else if( x > nextX) spritePath = { x:192,y:192 }
+    else if( y < nextY) spritePath = { x:256,y:192 }
+    else if( y > nextY) spritePath = { x:192,y:128 }
 
     ctx.drawImage(
       sprites,
@@ -218,29 +221,29 @@ window.onload = function(){
 
       //next position
       if( x < beforeX) haveRight = true;
-      if( x > beforeX) haveLeft = true;
-      if( y > beforeY)  haveUp = true;
-      if( y < beforeY)  haveDown = true;  
+      else if( x > beforeX) haveLeft = true;
+      else if( y > beforeY)  haveUp = true;
+      else if( y < beforeY)  haveDown = true;  
 
       //after position
       let { x: afterX , y: afterY } = trail[i+1] || snake;      
 
       if( x < afterX) haveRight = true;
-      if( x > afterX) haveLeft = true;
-      if( y > afterY) haveUp = true;
-      if( y < afterY) haveDown = true;       
+      else if( x > afterX) haveLeft = true;
+      else if( y > afterY) haveUp = true;
+      else if( y < afterY) haveDown = true;       
 
       // console.log({x,y,beforeX,beforeY,afterX,afterY})
       // console.log(haveRight,haveLeft,haveUp,haveDown)      
 
       //set sprite path
       if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
-      if( haveUp && haveDown) spritePath = { x:128,y:64 } 
+      else if( haveUp && haveDown) spritePath = { x:128,y:64 } 
 
-      if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
-      if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
-      if( haveRight && haveDown) spritePath = { x:0,y:0 } 
-      if( haveRight && haveUp) spritePath = { x:0,y:64 } 
+      else if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
+      else if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
+      else if( haveRight && haveDown) spritePath = { x:0,y:0 } 
+      else if( haveRight && haveUp) spritePath = { x:0,y:64 } 
       
       
       ctx.drawImage(
