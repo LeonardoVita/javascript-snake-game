@@ -64,6 +64,7 @@ window.onload = function(){
       y: snake.y,
       anchor: snake.direction
     });
+    
     //move snake head
     snake.x += snake.direction.x;
     snake.y += snake.direction.y;
@@ -153,9 +154,7 @@ window.onload = function(){
       food.x = randomX;
       food.y = randomY;  
       tail++;         
-    }
-    
-    
+    }    
 
     while(trail.length > tail){
       trail.shift();
@@ -188,15 +187,15 @@ window.onload = function(){
   function drawTail(){
     let spritePath = {
       x:0,
-      y:0
-    }      
-    const {x,y} = trail[0]
-    const {x:nextX, y:nextY} = trail[1] || snake
+      y:128,
+    }   
 
-    if( x < nextX ) spritePath = { x:256,y:128 } 
-    else if( x > nextX) spritePath = { x:192,y:192 }
-    else if( y < nextY) spritePath = { x:256,y:192 }
-    else if( y > nextY) spritePath = { x:192,y:128 }
+    const {x,y} = trail[0].anchor
+
+    if( x > 0) spritePath = { x:256,y:128 } 
+    else if( x < 0) spritePath = { x:192,y:192 }
+    else if( y > 0) spritePath = { x:256,y:192 }
+    else if( y < 0) spritePath = { x:192,y:128 }
 
     ctx.drawImage(
       sprites,
@@ -217,29 +216,33 @@ window.onload = function(){
 
     for(i=1; i < trail.length ;i++) {
       let  haveRight = haveLeft = haveUp = haveDown = false; //the adjacent positions
+
       const { x , y } = trail[i].anchor
-      const {x:beforeX, y:beforeY} = trail[i-1].anchor 
+      let {x:beforeX, y:beforeY} = trail[i-1].anchor 
+
+      //inverte valores
+      beforeX *= -1;
+      beforeY *= -1;
+
+      //next snake node direction
+      if(x > 0) haveRight = true;
+      else if(x < 0) haveLeft = true;
+      else if(y < 0) haveUp = true;
+      else if(y > 0) haveDown = true;
       
-      if(x > 0) haveRight = true
-      if(x < 0) haveLeft = true
-      if(y < 0) haveUp = true
-      if(y > 0) haveDown = true
-      
-      if(beforeX * -1 < 0) haveLeft = true
-      if(beforeX * -1 > 0 ) haveRight = true
-      if(beforeY * -1 < 0) haveUp = true
-      if(beforeY * -1 > 0) haveDown = true
-      // console.log({x,y,beforeX,beforeY,afterX,afterY})
-      // console.log(haveRight,haveLeft,haveUp,haveDown)     
+      //prev snake node direction
+      if(beforeX < 0) haveLeft = true;
+      else if(beforeX > 0 ) haveRight = true;
+      else if(beforeY < 0) haveUp = true;
+      else if(beforeY  > 0) haveDown = true;  
 
       //set sprite path
-      if( haveLeft && haveRight) spritePath = { x:64,y:0 } 
-      else if( haveUp && haveDown) spritePath = { x:128,y:64 } 
-      else if( haveLeft && haveDown) spritePath = { x:128,y:0 } 
-      else if( haveLeft && haveUp) spritePath = { x:128,y:128 } 
-      else if( haveRight && haveDown) spritePath = { x:0,y:0 } 
-      else if( haveRight && haveUp) spritePath = { x:0,y:64 } 
-      
+      if( haveLeft && haveRight) spritePath = { x:64,y:0 }; 
+      else if( haveUp && haveDown) spritePath = { x:128,y:64 }; 
+      else if( haveLeft && haveDown) spritePath = { x:128,y:0 };
+      else if( haveLeft && haveUp) spritePath = { x:128,y:128 }; 
+      else if( haveRight && haveDown) spritePath = { x:0,y:0 }; 
+      else if( haveRight && haveUp) spritePath = { x:0,y:64 };       
       
       ctx.drawImage(
         sprites,
