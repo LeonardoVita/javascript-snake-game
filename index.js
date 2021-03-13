@@ -40,8 +40,8 @@ window.onload = function(){
     if(e.keyCode === 38 && snake.direction.y !== 1) snake.direction = { x: 0, y: -1};
   }
 
-  function update(){      
-    
+  function update(){     
+
     //move snake head
     snake.x += snake.direction.x;
     snake.y += snake.direction.y;
@@ -51,6 +51,11 @@ window.onload = function(){
     if(snake.x > boxes - 1 ) snake.x = 0;
     if(snake.y < 0 ) snake.y = boxes - 1;
     if(snake.y > boxes - 1 ) snake.y = 0;
+
+    //border colision
+    // if(snake.x < 0 || snake.x > boxes - 1 || snake.y < 0 || snake.y > boxes - 1){
+    //   gameOver();
+    // }
 
   }
 
@@ -247,6 +252,6 @@ window.onload = function(){
     ctx.fillStyle = "#ffffff"
     ctx.font = "30px Comic Sans MS";
     ctx.fillText("Game Over", canvas.width/2 -80, canvas.height/2 - 5);
-    setInterval(()=>document.location.reload(true),4000);
+    setInterval(()=>location.reload(),4000);
   }
 }
