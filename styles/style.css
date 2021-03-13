@@ -3,6 +3,7 @@ body {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  background-color: palegoldenrod;
 }
 
 .container {
@@ -15,4 +16,36 @@ body {
 
 .container h1 {
   margin-bottom: 2rem;
+  font-size: 5rem;
+  color: darkgreen;
+  text-shadow: 0 0 10px lawngreen;
+}
+
+#Snake {
+  box-shadow: 0 0 8px #000;
+}
+
+.github-container {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  margin: 0 5px 5px 0;
+}
+
+.github-container a {
+  text-decoration: none;
+  color: #000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.github-container a:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
+.github-container a span {
+  margin-right: 1rem;
 }
