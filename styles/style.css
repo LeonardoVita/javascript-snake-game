@@ -21,10 +21,31 @@ body {
   text-shadow: 0 0 10px lawngreen;
 }
 
+.canvas-container {
+  position: relative;
+}
+
+.canvas-container button {
+  position: absolute;
+}
+
+.canvas-container button:hover {
+  cursor: pointer;
+}
+
+.touch-pad {
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(221, 221, 221, 0.473);
+  border: none;
+}
+
 #Snake {
   box-shadow: 0 0 8px #000;
 }
-
 .github-container {
   position: absolute;
   right: 0;

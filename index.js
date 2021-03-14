@@ -3,11 +3,18 @@ window.onload = function(){
   sprites.src = "./snake-graphics.png";
 
   const canvas = document.getElementById("Snake");
+  // const touchPad = document.getElementsByClassName("touch-pad");
 
   let box;  // tamanho dos quadrados
   const boxes = 16; // quantidade des quadrados na area 
 
-  if(window.screen.width < 512){
+  const screenWidth = window.screen.width;
+  const screenHeight = window.screen.height;
+
+  const screenHalfWidth = screenWidth / 2;
+  const screenHalfdHeight = screenHeight / 2;
+
+  if(screenWidth < 512){
     canvas.width  = 256;
     canvas.height = 256;
     box = 16    
@@ -16,8 +23,8 @@ window.onload = function(){
     canvas.height = 512;
     box = 32    
   }
-  const ctx = canvas.getContext("2d");
-  
+
+  const ctx = canvas.getContext("2d");  
   
   const snake = {
     x: 1,
@@ -42,6 +49,35 @@ window.onload = function(){
     update();  
     render();
     loop();
+  }
+
+  document.addEventListener("touchstart",handleTouchPad)
+  function handleTouchPad(event){
+    const touchX =  event.touches[0].clientX;
+    const touchY =  event.touches[0].clientY;
+
+    if(snake.direction.x !== 0){
+      if(touchY < screenHalfdHeight && snake.direction.y !== 1){
+        snake.direction = { x: 0, y: -1};
+        haveMovementBuffer = true;  
+      } 
+      else if (touchY > screenHalfdHeight && snake.direction.y !== -1){
+        snake.direction = { x: 0, y: 1};
+        haveMovementBuffer = true; 
+      }
+    }
+    else if (snake.direction.y !== 0){
+      if(touchX < screenHalfWidth && snake.direction.x !== 1){
+        snake.direction = { x: -1, y: 0};
+        haveMovementBuffer = true;  
+      } 
+      else if (touchX > screenHalfWidth && snake.direction.x !== -1){
+        snake.direction = { x: 1, y: 0};
+        haveMovementBuffer = true; 
+      }
+    } 
+
+    
   }
   
   document.addEventListener("keydown", moveSnake);
