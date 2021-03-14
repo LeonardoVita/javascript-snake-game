@@ -3,10 +3,22 @@ window.onload = function(){
   sprites.src = "./snake-graphics.png";
 
   const canvas = document.getElementById("Snake");
+
+  let box;  // tamanho dos quadrados
+  const boxes = 16; // quantidade des quadrados na area 
+
+  if(window.screen.width < 512){
+    canvas.width  = 256;
+    canvas.height = 256;
+    box = 16    
+  }else{
+    canvas.width  = 512;
+    canvas.height = 512;
+    box = 32    
+  }
   const ctx = canvas.getContext("2d");
   
-  const box = 32;  // tamanho dos quadrados
-  const boxes = 16; // quantidade des quadrados na area 
+  
   const snake = {
     x: 1,
     y: 8,
