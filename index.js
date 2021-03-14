@@ -15,9 +15,9 @@ window.onload = function(){
   const screenHalfdHeight = screenHeight / 2;
 
   if(screenWidth < 512){
-    canvas.width  = 256;
-    canvas.height = 256;
-    box = 16    
+    canvas.width  = Math.floor(screenWidth - 10);
+    canvas.height = Math.floor(screenWidth - 10);
+    box = Math.floor((screenWidth -10 ) / 16);   
   }else{
     canvas.width  = 512;
     canvas.height = 512;
