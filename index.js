@@ -55,28 +55,28 @@ window.onload = function(){
   function handleTouchPad(event){
     const touchX =  event.touches[0].clientX;
     const touchY =  event.touches[0].clientY;
-
-    if(snake.direction.x !== 0){
-      if(touchY < screenHalfdHeight && snake.direction.y !== 1){
-        snake.direction = { x: 0, y: -1};
-        haveMovementBuffer = true;  
-      } 
-      else if (touchY > screenHalfdHeight && snake.direction.y !== -1){
-        snake.direction = { x: 0, y: 1};
-        haveMovementBuffer = true; 
+    if(!haveMovementBuffer){ 
+      if(snake.direction.x !== 0){
+        if(touchY < screenHalfdHeight && snake.direction.y !== 1){
+          snake.direction = { x: 0, y: -1};
+          haveMovementBuffer = true;  
+        } 
+        else if (touchY > screenHalfdHeight && snake.direction.y !== -1){
+          snake.direction = { x: 0, y: 1};
+          haveMovementBuffer = true; 
+        }
       }
+      else if (snake.direction.y !== 0){
+        if(touchX < screenHalfWidth && snake.direction.x !== 1){
+          snake.direction = { x: -1, y: 0};
+          haveMovementBuffer = true;  
+        } 
+        else if (touchX > screenHalfWidth && snake.direction.x !== -1){
+          snake.direction = { x: 1, y: 0};
+          haveMovementBuffer = true; 
+        }
+      } 
     }
-    else if (snake.direction.y !== 0){
-      if(touchX < screenHalfWidth && snake.direction.x !== 1){
-        snake.direction = { x: -1, y: 0};
-        haveMovementBuffer = true;  
-      } 
-      else if (touchX > screenHalfWidth && snake.direction.x !== -1){
-        snake.direction = { x: 1, y: 0};
-        haveMovementBuffer = true; 
-      }
-    } 
-
     
   }
   
