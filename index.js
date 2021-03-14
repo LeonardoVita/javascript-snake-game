@@ -3,10 +3,11 @@ window.onload = function(){
   sprites.src = "./snake-graphics.png";
 
   const canvas = document.getElementById("Snake");
-  // const touchPad = document.getElementsByClassName("touch-pad");
+  const scoreElemente = document.getElementById("score");
 
   let box;  // tamanho dos quadrados
   const boxes = 16; // quantidade des quadrados na area 
+  let score = 0;
 
   const screenWidth = window.screen.width;
   const screenHeight = window.screen.height;
@@ -51,6 +52,8 @@ window.onload = function(){
     loop();
   }
 
+  let haveMovementBuffer = false
+
   document.addEventListener("touchstart",handleTouchPad)
   function handleTouchPad(event){
     const touchX =  event.touches[0].clientX;
@@ -78,11 +81,9 @@ window.onload = function(){
       } 
     }
     
-  }
-  
-  document.addEventListener("keydown", moveSnake);
-  let haveMovementBuffer = false
+  }  
 
+  document.addEventListener("keydown", moveSnake);
   function moveSnake(e){
     if(!haveMovementBuffer){
       if(e.keyCode === 39 && snake.direction.x !== -1 ){ 
@@ -201,7 +202,9 @@ window.onload = function(){
 
       food.x = randomX;
       food.y = randomY;  
-      tail++;         
+      tail++;
+      score += 15
+      scoreElemente.innerText =" " + score.toLocaleString('pt-BR', {minimumIntegerDigits: 4, useGrouping:false});         
     }    
 
     while(trail.length > tail){

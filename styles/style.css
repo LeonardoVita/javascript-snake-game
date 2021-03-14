@@ -48,6 +48,9 @@ body {
 #Snake {
   box-shadow: 0 0 8px #000;
 }
+.container h2 {
+  font-size: 2rem;
+}
 .github-container {
   position: absolute;
   right: 0;
