@@ -16,7 +16,7 @@ body {
 
 .container h1 {
   margin-bottom: 2rem;
-  font-size: 4rem;
+  font-size: 5rem;
   color: darkgreen;
   text-shadow: 0 0 10px lawngreen;
 }
@@ -69,4 +69,18 @@ body {
 
 .github-container a span {
   margin-right: 1rem;
+}
+
+@media (max-width: 512px) {
+  .container h1 {
+    font-size: 2.5rem;
+  }
+
+  .github-container {
+    font-size: 0.8rem;
+  }
+
+  .github-container svg {
+    width: 20px;
+  }
 }
