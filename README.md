@@ -14,4 +14,5 @@ live - https://leonardovita.github.io/javascript-snake-game/
 - setInterval and setTimeout
 - sprite sheets
 - responsivity
+- media queries
 - Event listeners (click,keydown,touchs)
