@@ -313,6 +313,12 @@ window.onload = function(){
       x:0,
       y:0
     }
+
+    function reload(){
+      document.addEventListener("keydown",()=>location.reload())
+      document.addEventListener("touchstart",()=>location.reload())
+    }
+
     document.removeEventListener("keydown", moveSnake);
 
     ctx.fillStyle = "#00000065"
@@ -320,6 +326,9 @@ window.onload = function(){
     ctx.fillStyle = "#ffffff"
     ctx.font = "30px Comic Sans MS";
     ctx.fillText("Game Over", canvas.width/2 -80, canvas.height/2 - 5);
-    setInterval(()=>location.reload(),4000);
+    ctx.font = "20px arial seriff";
+    ctx.fillText("Press any button to restart the game", canvas.width/2 - 135, canvas.height/2 + 40);
+
+    setTimeout(reload,1000);
   }
 }
