@@ -48,9 +48,16 @@ body {
 #Snake {
   box-shadow: 0 0 8px #000;
 }
+
 .container h2 {
   font-size: 2rem;
+  background-color: transparent;
 }
+
+.container h2 > span{
+  background-color: transparent;
+}
+
 .github-container {
   position: absolute;
   right: 0;

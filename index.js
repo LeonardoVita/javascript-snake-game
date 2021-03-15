@@ -302,7 +302,6 @@ window.onload = function(){
         trail[i].x * box, trail[i].y * box,
         box,box
       );
-
     } 
   }
   
@@ -323,11 +322,19 @@ window.onload = function(){
 
     ctx.fillStyle = "#00000065"
     ctx.fillRect(0,0, canvas.width, canvas.height)
+
     ctx.fillStyle = "#ffffff"
     ctx.font = "30px Comic Sans MS";
-    ctx.fillText("Game Over", canvas.width/2 -80, canvas.height/2 - 5);
+    const gameOverText = "Game Over",
+          gameOverTextWidth = ctx.measureText(gameOverText).width;
+
+    ctx.fillText(gameOverText, canvas.width/2 - gameOverTextWidth/2, canvas.height/2 - 15);
+
     ctx.font = "20px arial seriff";
-    ctx.fillText("Press any button to restart the game", canvas.width/2 - 135, canvas.height/2 + 40);
+    const pressButtonText = "Press any button to restart the game",
+          pressButtonTextWidth = ctx.measureText(pressButtonText).width;
+
+    ctx.fillText(pressButtonText, canvas.width/2 - pressButtonTextWidth/2, canvas.height/2 + 40);
 
     setTimeout(reload,1000);
   }
